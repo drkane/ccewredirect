@@ -12,9 +12,5 @@ def homepage():
 
 @app.route('/charity/<regno>')
 def charity(regno):
-    browser.open(CCEW_URL + "charity-search")
-    browser.select_form('#_uk_gov_ccew_portlet_CharitySearchPortlet_fm')
-    browser['_uk_gov_ccew_portlet_CharitySearchPortlet_keywords'] = regno
-    browser.submit_selected()
-    response = browser.find_link(link_text=regno)
-    return redirect(response['href'], code=303)
+    redirect_url = CCEW_URL + "charity-details/?regId={}&subId=0".format(regno)
+    return redirect(redirect_url, code=303)
