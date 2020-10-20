@@ -12,5 +12,8 @@ def homepage():
 
 @app.route('/charity/<regno>')
 def charity(regno):
-    redirect_url = CCEW_URL + "charity-details/?regId={}&subId=0".format(regno)
+    if regno.startswith("SC"):
+        redirect_url = "https://www.oscr.org.uk/about-charities/search-the-register/charity-details?number={}".format(regno)
+    else:
+        redirect_url = CCEW_URL + "charity-details/?regId={}&subId=0".format(regno)
     return redirect(redirect_url, code=303)
