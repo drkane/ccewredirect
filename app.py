@@ -34,9 +34,13 @@ def accounts(regno, fyend):
     charity_url = get_charity_url(regno)
     if charity_url.startswith(CCEW_URL):
         browser.open(charity_url)
-        browser.follow_link(link_text=StripLinkText("Accounts and annual returns"))
+        try:
+            browser.follow_link(link_text=StripLinkText("Accounts and annual returns"))
+        except mechanicalsoup.utils.LinkNotFoundError:
+            abort(404, description="No accounts available for this charity")
         for tr in browser.get_current_page().find_all('tr', class_='govuk-table__row'):
             cells = list(tr.find_all("td"))
             if cells and (cells[0].string.strip().lower() == 'accounts and tar') and (cells[1].string.strip() == fyend.strftime("%d %B %Y")):
                 return redirect(tr.find("a").attrs["href"], code=303)
-    abort(404, description="No accounts could be found for charity")
+        abort(404, description="This account could be found for this charity")
+    abort(404, description="Cannot access accounts for this charity")
