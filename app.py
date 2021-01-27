@@ -7,6 +7,7 @@ app = Flask(__name__)
 browser = mechanicalsoup.StatefulBrowser()
 CCEW_URL = "https://register-of-charities.charitycommission.gov.uk/"
 OSCR_URL = "https://www.oscr.org.uk/"
+FTC_URL = "https://findthatcharity.uk/"
 
 def get_charity_url(regno):
     if regno.startswith("SC"):
@@ -21,7 +22,7 @@ class StripLinkText(str):
 
 @app.route('/')
 def homepage():
-    return redirect(CCEW_URL, code=303)
+    return redirect(FTC_URL, code=303)
 
 @app.route('/charity/<regno>')
 def charity(regno):
