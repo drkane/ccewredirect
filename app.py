@@ -41,7 +41,7 @@ def accounts(regno, fyend):
             abort(404, description="No accounts available for this charity")
         for tr in browser.get_current_page().find_all('tr', class_='govuk-table__row'):
             cells = list(tr.find_all("td"))
-            if cells and (cells[0].string.strip().lower() == 'accounts and tar') and (cells[1].string.strip() == fyend.strftime("%d %B %Y")):
+            if cells and (cells[0].string.strip().lower() == 'accounts and tar') and (cells[1].text[:30].strip() == fyend.strftime("%d %B %Y")):
                 return redirect(tr.find("a").attrs["href"], code=303)
         abort(404, description="This account could be found for this charity")
     abort(404, description="Cannot access accounts for this charity")
