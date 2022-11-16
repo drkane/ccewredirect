@@ -4,3 +4,4 @@ black
 isort
 lxml
 python-dotenv
+gunicorn
