@@ -1,7 +1,7 @@
 import datetime
 
 import mechanicalsoup
-from flask import Flask, abort, redirect
+from flask import Flask, abort, redirect, request
 
 app = Flask(__name__)
 browser = mechanicalsoup.StatefulBrowser()
@@ -40,15 +40,21 @@ def charity(regno: str):
 
 @app.route("/charity/<regno>/accounts/<fyend>")
 def accounts(regno: str, fyend: str):
+    user_agent = request.headers.get("User-Agent")
     try:
         fyend = datetime.datetime.strptime(fyend, "%Y-%m-%d")
     except ValueError as e:
         abort(400, description=str(e))
     charity_url = get_charity_url(regno)
     if charity_url.startswith(CCEW_URL):
-        browser.open(charity_url)
+        browser.open(charity_url, headers={"User-Agent": user_agent})
         try:
-            browser.follow_link(link_text=StripLinkText("Accounts and annual returns"))
+            browser.follow_link(
+                link_text=StripLinkText("Accounts and annual returns"),
+                requests_kwargs=dict(
+                    headers={"User-Agent": user_agent},
+                ),
+            )
         except mechanicalsoup.utils.LinkNotFoundError:
             abort(404, description="No accounts available for this charity")
         for tr in browser.get_current_page().find_all("tr", class_="govuk-table__row"):
